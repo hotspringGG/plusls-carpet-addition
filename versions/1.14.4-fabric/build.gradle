@@ -44,6 +44,11 @@ repositories {
             includeGroup("maven.modrinth")
         }
     }
+
+    maven {
+        name("JitPack")
+        url("https://www.jitpack.io")
+    }
 }
 
 dependencies {

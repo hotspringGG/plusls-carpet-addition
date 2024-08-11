@@ -20,6 +20,7 @@ preprocess {
     Node mc12002 = createNode("1.20.2-fabric", 1_20_02, "mojang")
     Node mc12004 = createNode("1.20.4-fabric", 1_20_04, "mojang")
     Node mc12006 = createNode("1.20.6-fabric", 1_20_06, "mojang")
+    Node mc12100 = createNode("1.21.0-fabric", 1_21_00, "mojang")
 
     mc11404.link(mc11502, null)
     mc11502.link(mc11605, null)
@@ -32,6 +33,7 @@ preprocess {
     mc12001.link(mc12002, file("versions/mapping-1.20.1-1.20.2.txt"))
     mc12002.link(mc12004, null)
     mc12004.link(mc12006, null)
+    mc12006.link(mc12100, null)
 }
 
 ext {
@@ -87,7 +89,9 @@ ext {
             return "jitpack"
         }
 
-        type = env.BUILD_TYPE
+        //type = env.BUILD_TYPE
+
+        type = "RELEASE"
 
         switch (type) {
             case "RELEASE":

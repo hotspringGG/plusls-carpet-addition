@@ -62,6 +62,7 @@ def versions = Arrays.asList(
         "1.20.1",
         "1.20.2",
         "1.20.4",
+        "1.21",
 )
 
 Map<String, List<String>> settings = file("settings.json").withReader {

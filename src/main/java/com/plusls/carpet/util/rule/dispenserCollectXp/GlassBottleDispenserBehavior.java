@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.phys.AABB;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 //#if MC > 12001
@@ -35,10 +36,39 @@ public class GlassBottleDispenserBehavior extends MyFallibleItemDispenserBehavio
 
     private ItemStack replaceItem(BlockSource pointer, ItemStack oldItem, ItemStack newItem) {
         oldItem.shrink(1);
-        if (oldItem.isEmpty())
+        if (oldItem.isEmpty()) {
             return newItem.copy();
-        if (((DispenserBlockEntity) pointer.getEntity()).addItem(newItem.copy()) < 0)
+        }
+
+        try {
+            // 获取 DispenserBlockEntity 类的实例
+            DispenserBlockEntity dispenser = (DispenserBlockEntity) pointer.getEntity();
+
+            // 尝试获取 addItem 方法
+            Method addItemMethod = DispenserBlockEntity.class.getMethod("addItem", ItemStack.class);
+
+            // 如果找到 addItem 方法，调用它
+            if ((int) addItemMethod.invoke(dispenser, newItem.copy()) < 0) {
+                this.fallbackBehavior.dispense(pointer, newItem.copy());
+            }
+        } catch (NoSuchMethodException e) {
+            // 如果没有找到 addItem 方法，尝试获取 insertItem 方法
+            try {
+                Method insertItemMethod = DispenserBlockEntity.class.getMethod("insertItem", int.class, ItemStack.class, boolean.class);
+                if ((int) insertItemMethod.invoke(pointer.getEntity(), 0, newItem.copy(), false) < 0) {
+                    this.fallbackBehavior.dispense(pointer, newItem.copy());
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                // 处理方法未找到或反射调用失败的情况
+                this.fallbackBehavior.dispense(pointer, newItem.copy());
+            }
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+            // 处理反射调用失败的情况
             this.fallbackBehavior.dispense(pointer, newItem.copy());
+        }
+
         return oldItem;
     }
 
