@@ -28,8 +28,13 @@ public class MixinPlayerList {
         if (PluslsCarpetAdditionSettings.xaeroWorldName.equals(PluslsCarpetAdditionSettings.xaeroWorldNameNone)) {
             return;
         }
+        //#if MC < 12100
         ResourceLocation xaeroworldmap = new ResourceLocation("xaeroworldmap", "main");
         ResourceLocation xaerominimap = new ResourceLocation("xaerominimap", "main");
+        //#else
+        //$$ ResourceLocation xaeroworldmap = ResourceLocation.fromNamespaceAndPath("xaeroworldmap", "main");
+        //$$ ResourceLocation xaerominimap = ResourceLocation.fromNamespaceAndPath("xaerominimap", "main");
+        //#endif
 
         CRC32 crc = new CRC32();
         byte[] bytes = PluslsCarpetAdditionSettings.xaeroWorldName.getBytes(StandardCharsets.UTF_8);

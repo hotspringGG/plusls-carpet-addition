@@ -11,12 +11,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+
 @Mixin(AbstractVillager.class)
 public abstract class MixinAbstractVillager extends AgableMob {
     protected MixinAbstractVillager(EntityType<? extends AgableMob> entityType, Level level) {
         super(entityType, level);
     }
 
+    //#if MC<12100
     @Inject(
             method = "canBeLeashed",
             at = @At(
@@ -29,4 +31,7 @@ public abstract class MixinAbstractVillager extends AgableMob {
             cir.setReturnValue(!isLeashed());
         }
     }
+    //#else
+    //#endif
 }
+

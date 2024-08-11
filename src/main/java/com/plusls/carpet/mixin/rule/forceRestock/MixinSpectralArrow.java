@@ -16,10 +16,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SpectralArrow.class)
 public abstract class MixinSpectralArrow extends AbstractArrow {
-    //#if MC <= 12002
+    //#if MC>=12100
     protected MixinSpectralArrow(EntityType<? extends AbstractArrow> entityType, Level world) {
         super(entityType, world);
     }
+    //#elseif MC<=12002
+    //$$ protected MixinSpectralArrow(EntityType<? extends AbstractArrow> entityType, Level world) {
+    //$$     super(entityType, world);
+    //$$ }
     //#else
     //$$ protected MixinSpectralArrow(EntityType<? extends AbstractArrow> entityType, Level world, ItemStack item) {
     //$$     super(entityType, world, item);

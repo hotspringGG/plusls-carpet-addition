@@ -9,14 +9,12 @@ package com.plusls.carpet;
 import lombok.Getter;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import top.hendrixshen.magiclib.util.FabricUtil;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 
 public class PluslsCarpetAdditionReference {
     @Getter
@@ -31,23 +29,10 @@ public class PluslsCarpetAdditionReference {
 
     @Contract(value = "_ -> new", pure = true)
     public static @NotNull ResourceLocation identifier(String path) {
-        try {
-            // 尝试使用 fromNamespaceAndPath 方法
-            Method fromNamespaceAndPath = ResourceLocation.class.getMethod("fromNamespaceAndPath", String.class, String.class);
-            return (ResourceLocation) fromNamespaceAndPath.invoke(null, modIdentifier, path);
-        } catch (NoSuchMethodException e) {
-            // 如果没有 fromNamespaceAndPath 方法，使用反射调用构造函数
-            try {
-                Constructor<ResourceLocation> constructor = ResourceLocation.class.getDeclaredConstructor(String.class, String.class);
-                constructor.setAccessible(true);  // 允许访问私有构造函数
-                return constructor.newInstance(modIdentifier, path);
-            } catch (Exception ex) {
-                // 处理构造函数调用失败的情况
-                throw new RuntimeException("Failed to create ResourceLocation", ex);
-            }
-        } catch (Exception ex) {
-            // 处理反射调用失败的情况
-            throw new RuntimeException("Failed to create ResourceLocation using reflection", ex);
-        }
+        //#if MC >= 12100
+        //$$ return ResourceLocation.fromNamespaceAndPath(PluslsCarpetAdditionReference.modIdentifier, path);
+        //#else
+        return new ResourceLocation(PluslsCarpetAdditionReference.modIdentifier, path);
+        //#endif
     }
 }

@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinMob {
     // 因为村民本身就可以交互，所以原版客户端可以直接用绳子拴住村民
     // 但是怪物本身是不可交互的，因此要想拴住怪物需要在客户端安装 PCA
+    //#if MC<12100
     @Inject(
             method = "canBeLeashed",
             at = @At(
@@ -24,4 +25,6 @@ public class MixinMob {
             cir.setReturnValue(!((Mob) (Object) this).isLeashed());
         }
     }
+    //#else
+    //#endif
 }
